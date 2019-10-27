@@ -176,6 +176,7 @@ import org.lwjgl.stb.STBTTPackContext;
 import org.lwjgl.stb.STBTTPackedchar;
 import org.lwjgl.system.MemoryStack;
 
+import de.mdb.engine.core.GameEngine;
 import de.mdb.engine.core.event.Event;
 import de.mdb.engine.core.event.EventListener;
 import de.mdb.engine.core.event.EventManager;
@@ -237,9 +238,9 @@ public class GUIRenderer extends Renderer implements EventListener {
 
 	private final ByteBuffer ttf;
 
-	public GUIRenderer(long window) {
+	public GUIRenderer() {
 		super(null);
-		this.window = window;
+		this.window = GameEngine.getDisplay().getWindow();
 
 		EventManager.registerListener(this);
 		elements = new ArrayList<>();

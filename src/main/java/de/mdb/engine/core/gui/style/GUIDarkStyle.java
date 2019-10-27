@@ -4,9 +4,9 @@ import static org.lwjgl.nuklear.Nuklear.nk_rgba;
 
 import org.lwjgl.nuklear.NkColor;
 
-public class DarkStyle extends GUIStyle {
+public class GUIDarkStyle extends GUIStyle {
 	
-	public DarkStyle()
+	public GUIDarkStyle()
 	{
 		TEXT 					= nk_rgba(210, 210, 210, 255, NkColor.create());
 		WINDOW 					= nk_rgba(57, 67, 71, 255, NkColor.create());

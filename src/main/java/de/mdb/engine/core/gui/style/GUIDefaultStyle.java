@@ -5,7 +5,7 @@ import static org.lwjgl.nuklear.Nuklear.nk_style_default;
 import org.lwjgl.nuklear.NkColor;
 import org.lwjgl.nuklear.NkContext;
 
-public class DefaultStyle extends GUIStyle {
+public class GUIDefaultStyle extends GUIStyle {
 	
 	public void applyStyle(NkContext context)
 	{

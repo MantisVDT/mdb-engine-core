@@ -2,7 +2,7 @@ package de.mdb.engine.core.gui.elements;
 
 import org.lwjgl.nuklear.NkContext;
 
-import de.mdb.engine.core.gui.style.DefaultStyle;
+import de.mdb.engine.core.gui.style.GUIDefaultStyle;
 import de.mdb.engine.core.gui.style.GUIStyle;
 
 public abstract class GUIElement {
@@ -17,7 +17,7 @@ public abstract class GUIElement {
 	public GUIElement(String name)
 	{
 		this.name = name;
-		this.style = new DefaultStyle();
+		this.style = new GUIDefaultStyle();
 	}
 	
 	public abstract void layout(NkContext context);

@@ -37,9 +37,9 @@ import org.lwjgl.system.MemoryStack;
 import de.mdb.engine.core.gui.elements.GUIElement;
 import de.mdb.engine.core.logger.Debug;
 
-public class TestElement extends GUIElement{
+public class GUITestElement extends GUIElement{
 
-	public TestElement(String name) {
+	public GUITestElement(String name) {
 		super(name);
 	}
 

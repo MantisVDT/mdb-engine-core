@@ -4,9 +4,9 @@ import static org.lwjgl.nuklear.Nuklear.nk_rgba;
 
 import org.lwjgl.nuklear.NkColor;
 
-public class RedStyle extends GUIStyle {
+public class GUIRedStyle extends GUIStyle {
 	
-	public RedStyle() {
+	public GUIRedStyle() {
 		TEXT 					= nk_rgba(190, 190, 190, 255, NkColor.create());
 		WINDOW 					= nk_rgba(30, 33, 40, 255, NkColor.create());
 		HEADER 					= nk_rgba(181, 45, 69, 255, NkColor.create());

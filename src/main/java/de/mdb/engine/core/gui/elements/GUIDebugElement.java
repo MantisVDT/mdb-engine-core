@@ -30,9 +30,9 @@ import org.lwjgl.system.MemoryStack;
 import de.mdb.engine.core.GameEngine;
 import de.mdb.engine.core.util.Clock;
 
-public class DebugElement extends GUIElement {
+public class GUIDebugElement extends GUIElement {
 
-	public DebugElement() {
+	public GUIDebugElement() {
 		super("Debug");
 		x = 20;
 		y = 20;

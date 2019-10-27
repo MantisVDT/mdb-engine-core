@@ -24,8 +24,8 @@ import de.mdb.engine.core.event.Event;
 import de.mdb.engine.core.event.EventListener;
 import de.mdb.engine.core.event.EventManager;
 import de.mdb.engine.core.gui.GUIManager;
-import de.mdb.engine.core.gui.elements.DebugElement;
-import de.mdb.engine.core.gui.style.DarkStyle;
+import de.mdb.engine.core.gui.elements.GUIDebugElement;
+import de.mdb.engine.core.gui.style.GUIDarkStyle;
 import de.mdb.engine.core.input.Input;
 import de.mdb.engine.core.input.events.KeyReleasedEvent;
 import de.mdb.engine.core.light.DirectionalLight;
@@ -55,7 +55,7 @@ public class DummyGame implements IGameLogic, EventListener {
 
 	private Model monkey;
 	
-	private DebugElement debug;
+	private GUIDebugElement debug;
 
 	Vector3f pointLightPositions[] = { new Vector3f(0.7f, 0.2f, 2.0f), new Vector3f(2.3f, -3.3f, -4.0f),
 			new Vector3f(-4.0f, 2.0f, -12.0f), new Vector3f(0.0f, 0.0f, -3.0f) };
@@ -66,12 +66,12 @@ public class DummyGame implements IGameLogic, EventListener {
 		Display engineDisplay = GameEngine.getDisplay();
 		
 		//GUI Stuff
-		guiRenderer = new GUIRenderer(engineDisplay.getWindow());
+		guiRenderer = new GUIRenderer();
 		GUIManager.registerGUIRenderer(guiRenderer);
 		
 		//Create the DebugElement and set its style
-		debug = new DebugElement();
-		debug.setGUIStyle(new DarkStyle());
+		debug = new GUIDebugElement();
+		debug.setGUIStyle(new GUIDarkStyle());
 		
 		guiRenderer.addGUIElement(debug);
 
