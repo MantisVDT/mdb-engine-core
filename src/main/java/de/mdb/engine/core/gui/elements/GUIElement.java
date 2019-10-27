@@ -1,7 +1,10 @@
 package de.mdb.engine.core.gui.elements;
 
+import java.util.ArrayList;
+
 import org.lwjgl.nuklear.NkContext;
 
+import de.mdb.engine.core.gui.components.GUIComponent;
 import de.mdb.engine.core.gui.style.GUIDefaultStyle;
 import de.mdb.engine.core.gui.style.GUIStyle;
 
@@ -14,13 +17,33 @@ public abstract class GUIElement {
 	
 	protected GUIStyle style;
 	
-	public GUIElement(String name)
+	protected ArrayList<GUIComponent> components;
+	
+	public GUIElement(String name, int x, int y)
 	{
-		this.name = name;
 		this.style = new GUIDefaultStyle();
+		components = new ArrayList<>();
+		this.name = name;
+		this.x = x;
+		this.y = y;
 	}
 	
 	public abstract void layout(NkContext context);
+	
+	public void addComponent(GUIComponent component)
+	{
+		components.add(component);
+	}
+	
+	public void removeComponent(GUIComponent component)
+	{
+		components.remove(component);
+	}
+	
+	public void removeComponent(int index)
+	{
+		components.remove(index);
+	}
 	
 	public void setGUIStyle(GUIStyle style)
 	{

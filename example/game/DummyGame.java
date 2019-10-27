@@ -25,7 +25,7 @@ import de.mdb.engine.core.event.EventListener;
 import de.mdb.engine.core.event.EventManager;
 import de.mdb.engine.core.gui.GUIManager;
 import de.mdb.engine.core.gui.elements.GUIDebugElement;
-import de.mdb.engine.core.gui.style.GUIDarkStyle;
+import de.mdb.engine.core.gui.style.GUIRedStyle;
 import de.mdb.engine.core.input.Input;
 import de.mdb.engine.core.input.events.KeyReleasedEvent;
 import de.mdb.engine.core.light.DirectionalLight;
@@ -40,6 +40,7 @@ import de.mdb.engine.core.shader.Shader;
 import de.mdb.engine.core.shader.ShaderProgram;
 import de.mdb.engine.core.util.Clock;
 import de.mdb.engine.core.util.Data;
+import gui.GUITestElement;
 
 public class DummyGame implements IGameLogic, EventListener {
 	
@@ -71,10 +72,11 @@ public class DummyGame implements IGameLogic, EventListener {
 		GUIManager.registerGUIRenderer(guiRenderer);
 		
 		//Create the DebugElement and set its style
-		debug = new GUIDebugElement();
-		debug.setGUIStyle(new GUIDarkStyle());
+		debug = new GUIDebugElement("Debug", 20, 20);
+		debug.setGUIStyle(new GUIRedStyle());
 		
 		guiRenderer.addGUIElement(debug);
+		guiRenderer.addGUIElement(new GUITestElement("Test", 20, 280));
 
 		//Main shader
 		simpleShader = new ShaderProgram();
@@ -174,6 +176,7 @@ public class DummyGame implements IGameLogic, EventListener {
 		
 		NkColorf bg = debug.getBackground();
 		GameEngine.setClearColor(new Vector4f(bg.r(), bg.g(), bg.b(), bg.a()));
+		
 	}
 
 	public void render() {
@@ -183,7 +186,7 @@ public class DummyGame implements IGameLogic, EventListener {
 	}
 
 	public void cleanup() {
-
+		
 	}
 
 	public static void main(String[] args) {

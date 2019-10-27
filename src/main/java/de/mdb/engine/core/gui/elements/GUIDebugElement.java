@@ -32,10 +32,8 @@ import de.mdb.engine.core.util.Clock;
 
 public class GUIDebugElement extends GUIElement {
 
-	public GUIDebugElement() {
-		super("Debug");
-		x = 20;
-		y = 20;
+	public GUIDebugElement(String name, int x, int y) {
+		super(name, x, y);
 	}
 	
 	NkColorf background = NkColorf.create().r(0.10f).g(0.18f).b(0.24f).a(1.0f);
