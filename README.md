@@ -24,7 +24,7 @@ public static void main(String[] args) {
 
 With this you should get a Window with black background and the given title, width and height.
 
-**Code:** [SimpleExample](https://github.com/MattisDerBock/mdb-engine-core/tree/master/example/game/SimpleEcample.java)
+**Code:** [SimpleExample](https://github.com/MattisDerBock/mdb-engine-core/tree/master/example/game/SimpleExample.java)
 
 For further reference check the [Wiki](https://github.com/MattisDerBock/mdb-engine-core/wiki) or the [Examples](https://github.com/MattisDerBock/mdb-engine-core/tree/master/example).
 
