@@ -26,7 +26,7 @@ With this you should get a Window with black background and the given title, wid
 
 **Code:** [SimpleExample](https://github.com/MattisDerBock/mdb-engine-core/blob/master/example/examples/SimpleExample.java)
 
-For further reference check the [Wiki](https://github.com/MattisDerBock/mdb-engine-core/wiki).
+For further reference check the [Wiki](https://github.com/MattisDerBock/mdb-engine-core/wiki) or the [Examples](https://github.com/MattisDerBock/mdb-engine-core/tree/master/example/examples).
 
 
 
