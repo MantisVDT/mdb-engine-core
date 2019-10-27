@@ -187,8 +187,7 @@ public class DummyGame implements IGameLogic, EventListener {
 	}
 
 	public static void main(String[] args) {
-		IGameLogic gameLogic = new DummyGame();
-		GameEngine engine = new GameEngine("Dummy", 1280, 860, true, gameLogic);
+		GameEngine engine = new GameEngine("Dummy", 1280, 860, true, new DummyGame());
 		engine.start();
 	}
 
