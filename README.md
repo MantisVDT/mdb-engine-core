@@ -5,7 +5,7 @@ This is the core part of my Game Engine written in Java using [LWJGL](https://ww
 ## Getting started
 
 Create a class which implements the IGameLogic interface
-```
+```java
 public class SimpleExample implements IGameLogic
 ```
 
@@ -15,7 +15,7 @@ It will be forced to implement the methods init, input, update, render and clean
 The creation of the GameEngine takes in the Title, Width and Height for a Window as its first three parameters, the fourth one is if vSync should be enabled and the last one is a class which implements IGameLogic.
 
 Example:
-```
+```java
 public static void main(String[] args) {
 		GameEngine engine = new GameEngine("SimpleExample", 1280, 860, true, new SimpleExample());
 		engine.start();

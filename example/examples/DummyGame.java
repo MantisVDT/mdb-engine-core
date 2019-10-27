@@ -24,7 +24,6 @@ import de.mdb.engine.core.event.Event;
 import de.mdb.engine.core.event.EventListener;
 import de.mdb.engine.core.event.EventManager;
 import de.mdb.engine.core.gui.GUIManager;
-import de.mdb.engine.core.gui.GUIRenderer;
 import de.mdb.engine.core.gui.elements.DebugElement;
 import de.mdb.engine.core.gui.style.DarkStyle;
 import de.mdb.engine.core.input.Input;
@@ -35,6 +34,7 @@ import de.mdb.engine.core.light.PointLightManager;
 import de.mdb.engine.core.model.Model;
 import de.mdb.engine.core.model.OBJLoader;
 import de.mdb.engine.core.render.FirstPersonRenderer;
+import de.mdb.engine.core.render.GUIRenderer;
 import de.mdb.engine.core.render.ModelRenderer;
 import de.mdb.engine.core.shader.Shader;
 import de.mdb.engine.core.shader.ShaderProgram;
@@ -107,12 +107,12 @@ public class DummyGame implements IGameLogic, EventListener {
 		new PointLight(pointLightPositions[3], ambient, diffuse, specular, constant, linear, quadratic);
 		
 		//Models
-		Model nanoSuit = OBJLoader.loadModel(Data.RES_PATH + "nanosuit.obj", "", Assimp.aiProcess_Triangulate);
+		Model nanoSuit = OBJLoader.loadModel(Data.RES_PATH + "models/nanosuit/nanosuit.obj", "models/nanosuit/", Assimp.aiProcess_Triangulate);
 		
-		Model cube = OBJLoader.loadModel(Data.RES_PATH + "cube.obj", "", Assimp.aiProcess_Triangulate);
+		Model cube = OBJLoader.loadModel(Data.RES_PATH + "models/cube/cube.obj", "", Assimp.aiProcess_Triangulate);
 		cube.translate(5.0f, 0, 0);
 		
-		monkey = OBJLoader.loadModel(Data.RES_PATH + "monkey.obj", "", Assimp.aiProcess_Triangulate);
+		monkey = OBJLoader.loadModel(Data.RES_PATH + "models/monkey/monkey.obj", "", Assimp.aiProcess_Triangulate);
 		monkey.translate(-8.0f, 0, 0);
 		
 		//Model renderer
@@ -122,7 +122,6 @@ public class DummyGame implements IGameLogic, EventListener {
 		modelRenderer.addModel(monkey);
 		
 		GameEngine.registerRenderer(modelRenderer);
-		
 	}
 	
 	@Event

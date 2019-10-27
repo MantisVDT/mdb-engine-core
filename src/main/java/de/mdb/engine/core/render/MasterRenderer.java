@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL11.glEnable;
 
 import org.joml.Vector4f;
 
-public class MasterRenderer extends Renderer{
+public class MasterRenderer extends Renderer {
 	
 	private Vector4f clear_color;
 	

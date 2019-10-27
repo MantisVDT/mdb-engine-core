@@ -1,4 +1,4 @@
-package de.mdb.engine.core.gui;
+package de.mdb.engine.core.render;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_B;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
@@ -103,7 +103,6 @@ import static org.lwjgl.opengl.GL11C.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MAG_FILTER;
 import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MIN_FILTER;
 import static org.lwjgl.opengl.GL11C.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11C.GL_TRUE;
 import static org.lwjgl.opengl.GL11C.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL11C.GL_UNSIGNED_SHORT;
 import static org.lwjgl.opengl.GL11C.glBindTexture;
@@ -129,23 +128,7 @@ import static org.lwjgl.opengl.GL15C.glBufferData;
 import static org.lwjgl.opengl.GL15C.glGenBuffers;
 import static org.lwjgl.opengl.GL15C.glMapBuffer;
 import static org.lwjgl.opengl.GL15C.glUnmapBuffer;
-import static org.lwjgl.opengl.GL20C.GL_COMPILE_STATUS;
-import static org.lwjgl.opengl.GL20C.GL_FRAGMENT_SHADER;
-import static org.lwjgl.opengl.GL20C.GL_LINK_STATUS;
-import static org.lwjgl.opengl.GL20C.GL_VERTEX_SHADER;
-import static org.lwjgl.opengl.GL20C.glAttachShader;
-import static org.lwjgl.opengl.GL20C.glCompileShader;
-import static org.lwjgl.opengl.GL20C.glCreateProgram;
-import static org.lwjgl.opengl.GL20C.glCreateShader;
 import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20C.glGetAttribLocation;
-import static org.lwjgl.opengl.GL20C.glGetProgrami;
-import static org.lwjgl.opengl.GL20C.glGetShaderi;
-import static org.lwjgl.opengl.GL20C.glGetUniformLocation;
-import static org.lwjgl.opengl.GL20C.glLinkProgram;
-import static org.lwjgl.opengl.GL20C.glShaderSource;
-import static org.lwjgl.opengl.GL20C.glUniform1i;
-import static org.lwjgl.opengl.GL20C.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL20C.glUseProgram;
 import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
@@ -176,6 +159,7 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import org.joml.Matrix4f;
 import org.lwjgl.nuklear.NkAllocator;
 import org.lwjgl.nuklear.NkBuffer;
 import org.lwjgl.nuklear.NkContext;
@@ -191,7 +175,6 @@ import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.stb.STBTTPackContext;
 import org.lwjgl.stb.STBTTPackedchar;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.Platform;
 
 import de.mdb.engine.core.event.Event;
 import de.mdb.engine.core.event.EventListener;
@@ -202,6 +185,8 @@ import de.mdb.engine.core.input.events.KeyEvent;
 import de.mdb.engine.core.input.events.MouseEvent;
 import de.mdb.engine.core.input.events.MouseMovedEvent;
 import de.mdb.engine.core.input.events.ScrollEvent;
+import de.mdb.engine.core.shader.Shader;
+import de.mdb.engine.core.shader.ShaderProgram;
 import de.mdb.engine.core.util.Data;
 import de.mdb.engine.core.util.IOUtil;
 
@@ -211,7 +196,7 @@ import de.mdb.engine.core.util.IOUtil;
  * @author Mattis Böckle
  *
  */
-public class GUIRenderer implements EventListener {
+public class GUIRenderer extends Renderer implements EventListener {
 
 	private NkContext ctx;
 
@@ -237,11 +222,6 @@ public class GUIRenderer implements EventListener {
 	private NkDrawNullTexture null_texture = NkDrawNullTexture.create();
 
 	private int vbo, vao, ebo;
-	private int prog;
-	private int vert_shdr;
-	private int frag_shdr;
-	private int uniform_tex;
-	private int uniform_proj;
 
 	private long window;
 
@@ -258,6 +238,7 @@ public class GUIRenderer implements EventListener {
 	private final ByteBuffer ttf;
 
 	public GUIRenderer(long window) {
+		super(null);
 		this.window = window;
 
 		EventManager.registerListener(this);
@@ -400,42 +381,16 @@ public class GUIRenderer implements EventListener {
 	}
 
 	private void setupContext() {
-		String NK_SHADER_VERSION = Platform.get() == Platform.MACOSX ? "#version 150\n" : "#version 300 es\n";
-		String vertex_shader = NK_SHADER_VERSION + "uniform mat4 ProjMtx;\n" + "in vec2 Position;\n"
-				+ "in vec2 TexCoord;\n" + "in vec4 Color;\n" + "out vec2 Frag_UV;\n" + "out vec4 Frag_Color;\n"
-				+ "void main() {\n" + "   Frag_UV = TexCoord;\n" + "   Frag_Color = Color;\n"
-				+ "   gl_Position = ProjMtx * vec4(Position.xy, 0, 1);\n" + "}\n";
-		String fragment_shader = NK_SHADER_VERSION + "precision mediump float;\n" + "uniform sampler2D Texture;\n"
-				+ "in vec2 Frag_UV;\n" + "in vec4 Frag_Color;\n" + "out vec4 Out_Color;\n" + "void main(){\n"
-				+ "   Out_Color = Frag_Color * texture(Texture, Frag_UV.st);\n" + "}\n";
-
+		Shader guiVertex = new Shader(Data.RES_PATH + "shaders/guiVertexShader.vs", Shader.VERTEX_SHADER);
+		Shader guiFragment = new Shader(Data.RES_PATH + "shaders/guiFragmentShader.fs", Shader.FRAGMENT_SHADER);
+		
+		shader = new ShaderProgram();
+		shader.attachShader(guiVertex);
+		shader.attachShader(guiFragment);
+		shader.linkShader();
+		
 		nk_buffer_init(cmds, ALLOCATOR, BUFFER_INITIAL_SIZE);
-		prog = glCreateProgram();
-		vert_shdr = glCreateShader(GL_VERTEX_SHADER);
-		frag_shdr = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(vert_shdr, vertex_shader);
-		glShaderSource(frag_shdr, fragment_shader);
-		glCompileShader(vert_shdr);
-		glCompileShader(frag_shdr);
-		if (glGetShaderi(vert_shdr, GL_COMPILE_STATUS) != GL_TRUE) {
-			throw new IllegalStateException();
-		}
-		if (glGetShaderi(frag_shdr, GL_COMPILE_STATUS) != GL_TRUE) {
-			throw new IllegalStateException();
-		}
-		glAttachShader(prog, vert_shdr);
-		glAttachShader(prog, frag_shdr);
-		glLinkProgram(prog);
-		if (glGetProgrami(prog, GL_LINK_STATUS) != GL_TRUE) {
-			throw new IllegalStateException();
-		}
-
-		uniform_tex = glGetUniformLocation(prog, "Texture");
-		uniform_proj = glGetUniformLocation(prog, "ProjMtx");
-		int attrib_pos = glGetAttribLocation(prog, "Position");
-		int attrib_uv = glGetAttribLocation(prog, "TexCoord");
-		int attrib_col = glGetAttribLocation(prog, "Color");
-
+		
 		{
 			// buffer setup
 			vbo = glGenBuffers();
@@ -446,13 +401,13 @@ public class GUIRenderer implements EventListener {
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
-			glEnableVertexAttribArray(attrib_pos);
-			glEnableVertexAttribArray(attrib_uv);
-			glEnableVertexAttribArray(attrib_col);
+			glEnableVertexAttribArray(0);
+			glEnableVertexAttribArray(1);
+			glEnableVertexAttribArray(2);
 
-			glVertexAttribPointer(attrib_pos, 2, GL_FLOAT, false, 20, 0);
-			glVertexAttribPointer(attrib_uv, 2, GL_FLOAT, false, 20, 8);
-			glVertexAttribPointer(attrib_col, 4, GL_UNSIGNED_BYTE, true, 20, 16);
+			glVertexAttribPointer(0, 2, GL_FLOAT, false, 20, 0);
+			glVertexAttribPointer(1, 2, GL_FLOAT, false, 20, 8);
+			glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, true, 20, 16);
 		}
 
 		{
@@ -502,10 +457,10 @@ public class GUIRenderer implements EventListener {
 			glEnable(GL_SCISSOR_TEST);
 			glActiveTexture(GL_TEXTURE0);
 
-			// setup program
-			glUseProgram(prog);
-			glUniform1i(uniform_tex, 0);
-			glUniformMatrix4fv(uniform_proj, false, stack.floats(2.0f / width, 0.0f, 0.0f, 0.0f, 0.0f, -2.0f / height,
+			// setup shader
+			shader.use();
+			shader.setInt("Texture", 0);
+			shader.setMat4("ProjMtx", new Matrix4f(2.0f / width, 0.0f, 0.0f, 0.0f, 0.0f, -2.0f / height,
 					0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, -1.0f, 1.0f, 0.0f, 1.0f));
 		}
 

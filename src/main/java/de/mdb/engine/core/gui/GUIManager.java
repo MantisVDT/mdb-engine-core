@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import de.mdb.engine.core.gui.elements.GUIElement;
 import de.mdb.engine.core.logger.Debug;
+import de.mdb.engine.core.render.GUIRenderer;
 
 public class GUIManager {
 	
