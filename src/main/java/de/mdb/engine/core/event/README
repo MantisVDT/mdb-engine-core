@@ -1,4 +1,4 @@
 The Event System was implemented from Simon Forsberg with slight changes from:
 https://codereview.stackexchange.com/questions/36153/my-event-handling-system
 
-All classes except EventManager belong to him
+All classes in the event package except EventManager belong to him
