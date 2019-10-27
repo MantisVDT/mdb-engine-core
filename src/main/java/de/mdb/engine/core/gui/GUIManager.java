@@ -36,7 +36,7 @@ public class GUIManager {
 		}
 	}
 	
-	public static void addGUIRenderer(GUIRenderer renderer)
+	public static void registerGUIRenderer(GUIRenderer renderer)
 	{
 		renderers.add(renderer);
 	}

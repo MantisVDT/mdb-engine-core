@@ -67,7 +67,7 @@ public class DummyGame implements IGameLogic, EventListener {
 		
 		//GUI Stuff
 		guiRenderer = new GUIRenderer(engineDisplay.getWindow());
-		GUIManager.addGUIRenderer(guiRenderer);
+		GUIManager.registerGUIRenderer(guiRenderer);
 		
 		//Create the DebugElement and set its style
 		debug = new DebugElement();
