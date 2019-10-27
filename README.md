@@ -8,7 +8,7 @@ TODO
 
 ### Prerequisites
 
-This Engine carries all its required prerequisites. You shouldn't have to install anything additionally.
+This Engine carries all its required prerequisites. You shouldn't have to install anything in addition to that.
 
 ## Authors
 * **Mattis Böckle** - *Initial Work* - [MattisDerBock](https://github.com/MattisDerBock)
