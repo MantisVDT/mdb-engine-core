@@ -42,7 +42,7 @@ For further reference check the [Wiki](https://github.com/MattisDerBock/mdb-engi
 
 ### Prerequisites
 
-This Engine carries all its required prerequisites. You shouldn't have to install anything in addition to that.
+None
 
 ## Authors
 * **Mattis Böckle** - *Initial Work* - [MattisDerBock](https://github.com/MattisDerBock)
@@ -53,4 +53,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgements
 
-* [PurpleBooth](https://github.com/PurpleBooth) - *For the Templates to make this Readme*
+* [PurpleBooth](https://github.com/PurpleBooth) - *For the Template to make this Readme*
