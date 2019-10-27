@@ -56,14 +56,18 @@ public class GUITestElement extends GUIElement{
 	public void layout(NkContext context) {
 		try (MemoryStack stack = stackPush()) {
 			NkRect rect = NkRect.mallocStack(stack);
-
+			
+			//Starting the GUIElement, setting flags
 			if (nk_begin(context, name, nk_rect(x, y, 230, 250, rect), NK_WINDOW_BORDER | NK_WINDOW_MOVABLE
 					| NK_WINDOW_SCALABLE | NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE)) {
+				
+				//Adding button with static layout
 				nk_layout_row_static(context, 30, 80, 1);
 				if (nk_button_label(context, "button")) {
 					Debug.info("button pressed");
 				}
-
+				
+				//Adding option buttons
 				nk_layout_row_dynamic(context, 30, 2);
 				if (nk_option_label(context, "easy", op == EASY)) {
 					op = EASY;
@@ -71,12 +75,16 @@ public class GUITestElement extends GUIElement{
 				if (nk_option_label(context, "hard", op == HARD)) {
 					op = HARD;
 				}
-
+				
+				//Adding compression slider
 				nk_layout_row_dynamic(context, 25, 1);
 				nk_property_int(context, "Compression:", 0, compression, 100, 10, 1);
-
+				
+				//Add the background label
 				nk_layout_row_dynamic(context, 20, 1);
 				nk_label(context, "background:", NK_TEXT_LEFT);
+				
+				//Add the color picker
 				nk_layout_row_dynamic(context, 25, 1);
 				if (nk_combo_begin_color(context, nk_rgb_cf(background, NkColor.mallocStack(stack)),
 						NkVec2.mallocStack(stack).set(nk_widget_width(context), 400))) {
