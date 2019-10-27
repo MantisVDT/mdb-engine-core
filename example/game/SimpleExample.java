@@ -1,4 +1,4 @@
-package examples;
+package game;
 
 import de.mdb.engine.core.GameEngine;
 import de.mdb.engine.core.IGameLogic;

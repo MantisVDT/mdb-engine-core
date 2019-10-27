@@ -1,4 +1,4 @@
-package de.mdb.engine.core.gui.elements;
+package gui;
 
 import static org.lwjgl.nuklear.Nuklear.NK_RGBA;
 import static org.lwjgl.nuklear.Nuklear.NK_TEXT_LEFT;
@@ -34,6 +34,7 @@ import org.lwjgl.nuklear.NkRect;
 import org.lwjgl.nuklear.NkVec2;
 import org.lwjgl.system.MemoryStack;
 
+import de.mdb.engine.core.gui.elements.GUIElement;
 import de.mdb.engine.core.logger.Debug;
 
 public class TestElement extends GUIElement{

@@ -1,4 +1,4 @@
-package examples;
+package event;
 
 import de.mdb.engine.core.event.Event;
 import de.mdb.engine.core.event.EventListener;

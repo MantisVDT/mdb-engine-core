@@ -46,7 +46,6 @@ public class Texture {
 		return h;
 	}
 	
-	//TODO: Doesnt really work, should implement
 	public static final Texture DEFAULT_TEXTURE = new Texture(ByteBuffer.wrap(new byte[0]), 1, 1);
 	
 }
