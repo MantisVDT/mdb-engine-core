@@ -42,7 +42,8 @@ import de.mdb.engine.core.util.Clock;
 import de.mdb.engine.core.util.Data;
 
 public class DummyGame implements IGameLogic, EventListener {
-
+	
+	//VARIABLES
 	private ModelRenderer modelRenderer;
 	private GUIRenderer guiRenderer;
 	
