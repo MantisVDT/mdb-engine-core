@@ -32,7 +32,13 @@ For further reference check the [Wiki](https://github.com/MattisDerBock/mdb-engi
 
 ### Features
 
-* 
+* Automatic GameLoop
+* Custom Event System
+* Texture loading
+* Model loading
+* OpenGL Shader wrappers
+* Nuklear GUI wrappers (WIP)
+* Easy rendering System
 
 ### Prerequisites
 
@@ -47,4 +53,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgements
 
-* [PurpleBooth](https://github.com/PurpleBooth) - *For his Templates to make a readable Readme*
+* [PurpleBooth](https://github.com/PurpleBooth) - *For the Templates to make this Readme*
