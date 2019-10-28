@@ -45,7 +45,7 @@ For further reference check the [Wiki](https://github.com/MattisDerBock/mdb-engi
 None
 
 ## Authors
-* **Mattis Böckle** - *Initial Work* - [MattisDerBock](https://github.com/MattisDerBock)
+* **Mattis Böckle** - *Initial Work* - [MantisVDT](https://github.com/MantisVDT)
 
 ## License
 
