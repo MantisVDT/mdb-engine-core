@@ -5,12 +5,27 @@ import java.util.logging.Level;
 
 import de.mdb.engine.core.logger.Debug;
 
-public class EventHandler implements Comparable<EventHandler>{
+/**
+ * Represents one EventHandler to be stored in the EventExecutor
+ * 
+ * @author Simon Forsberg
+ * Changes by Mattis Boeckle
+ *
+ */
+public class EventHandler{
 	
+	//Private Fields
 	private final EventListener listener;
 	private final Method method;
 	private final Event annotation;
 	
+	/**
+	 * Constructor for one EventHandler
+	 * 
+	 * @param listener The stored EventListener
+	 * @param method The 
+	 * @param annotation
+	 */
 	public EventHandler(EventListener listener, Method method, Event annotation)
 	{
 		this.listener = listener;
@@ -48,17 +63,4 @@ public class EventHandler implements Comparable<EventHandler>{
 	{
 		return "(EventHandler" + this.listener + ": " + method.getName() + ")";
 	}
-	
-	public int getPriority()
-	{
-		return annotation.priority();
-	}
-	
-	@Override
-	public int compareTo(EventHandler other) {
-		int annotation = this.annotation.priority() - other.annotation.priority();
-		if(annotation == 0) annotation = this.listener.hashCode()- other.listener.hashCode();
-		return annotation == 0 ? this.hashCode() - other.hashCode() : annotation;
-	}
-
 }
