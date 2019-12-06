@@ -118,11 +118,15 @@ public class DummyGame implements IGameLogic, EventListener {
 		monkey = OBJLoader.loadModel(Data.RES_PATH + "models/monkey/monkey.obj", "", Assimp.aiProcess_Triangulate);
 		monkey.translate(-8.0f, 0, 0);
 		
+		Model tower = OBJLoader.loadModel(Data.RES_PATH + "models/tower/tower_High.obj", "models/tower/textures", Assimp.aiProcess_Triangulate);
+		tower.translate(0, 0, -10.0f);
+		
 		//Model renderer
 		modelRenderer = new ModelRenderer(simpleShader);
 		modelRenderer.addModel(nanoSuit);
 		modelRenderer.addModel(cube);
 		modelRenderer.addModel(monkey);
+		modelRenderer.addModel(tower);
 		
 		GameEngine.registerRenderer(modelRenderer);
 	}

@@ -143,6 +143,7 @@ public class OBJLoader {
 	private static float[] processNormals(AIMesh aiMesh)
 	{
 		AIVector3D.Buffer aiNormals = aiMesh.mNormals();
+
 		float[] normals = new float[aiNormals.capacity()*3];
 		
 		for(int i=0; i<aiNormals.capacity() && aiNormals != null; i++)

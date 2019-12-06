@@ -22,6 +22,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetFramebufferSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
@@ -47,8 +48,16 @@ import de.mdb.engine.core.input.Input;
 import de.mdb.engine.core.input.events.KeyReleasedEvent;
 import de.mdb.engine.core.logger.Debug;
 
+/**
+ * Represents a Window in the GameEngine
+ * and handles GLFW
+ * 
+ * @author Mattis Boeckle
+ *
+ */
 public class Display implements EventListener {
 
+	//Private Fields
 	private String mTitle;
 	private int mWidth;
 	private int mHeight;
@@ -57,22 +66,44 @@ public class Display implements EventListener {
 
 	private long mWindow = 0;
 
+	/**
+	 * The Constructor to create a Display <br>
+	 * 
+	 * <b>NOTE</b> vSync does not work correctly right now, it should be enabled at all times to
+	 * avoid stuttering
+	 * 
+	 * @param width The width of the Display in pixels
+	 * @param height The height of the Display in pixels
+	 * @param title The Title of the Display
+	 * @param vSync Whether vSync should be enabled (see note)
+	 */
 	public Display(int width, int height, String title, boolean vSync) {
 		EventManager.registerListener(this);
 		mTitle = title;
 		mWidth = width;
 		mHeight = height;
 		mvSync = vSync;
+		
+		createWindow();
 	}
 
+	/**
+	 * The EventListener function for the KeyReleasedEvent <br>
+	 * Will be called from EventManager
+	 * 
+	 * @param e The called KeyReleasedEvent
+	 */
 	@Event
 	public void onKeyReleased(KeyReleasedEvent e) {
 		if (e.getKeyCode() == GLFW.GLFW_KEY_ESCAPE) {
 			glfwSetWindowShouldClose(mWindow, true);
 		}
 	}
-
-	public void createWindow() {
+	
+	/**
+	 * Handles GLFW and the creation of a new Window with Events and Input
+	 */
+	private void createWindow() {
 		if (!glfwInit()) {
 			Debug.severe("Failed to initialize GLFW!");
 		}
@@ -121,55 +152,131 @@ public class Display implements EventListener {
 			glfwSwapInterval(1);
 	}
 
+	/**
+	 * Setter for ClipboardString <br>
+	 * Wrapper for GLFW
+	 * 
+	 * @param str The ByteBuffer to set the ClipboardString to
+	 */
 	public void setClipboardString(ByteBuffer str) {
 		glfwSetClipboardString(mWindow, str);
 	}
 
+	/**
+	 * Getter for ClipboardString <br>
+	 * Wrapper for GLFW
+	 * 
+	 * @return The ClipboardString of the window as a long
+	 */
 	public long getClipboardString() {
 		return nglfwGetClipboardString(mWindow);
 	}
 
+	/**
+	 * Setter for CursorPosition <br>
+	 * Wrapper for GLFW
+	 * 
+	 * @param x The new x position of the Cursor in pixels
+	 * @param y The new y position of the Cursor in pixels
+	 */
 	public void setCursorPosition(int x, int y) {
 		glfwSetCursorPos(mWindow, x, y);
 	}
 
+	/**
+	 * Setter for InputMode <br>
+	 * Wrapper for GLFW
+	 * 
+	 * @param mode The ID of the mode to be changed 
+	 * @param value The new value of the mode
+	 */
 	public void setInputMode(int mode, int value) {
 		glfwSetInputMode(mWindow, mode, value);
 	}
 
+	/**
+	 * Setter for the Title <br>
+	 * Will not change the Variable in the Display class. May be used to dynamically change the Title of the Window
+	 * based on for Example FPS, UPS or Frame time <br><br>
+	 * GLFW Wrapper
+	 * 
+	 * @param title The new Title of the Display
+	 */
 	public void setTitle(String title) {
-		GLFW.glfwSetWindowTitle(mWindow, title);
+		glfwSetWindowTitle(mWindow, title);
 	}
-
+	
+	/**
+	 * Getter for the Time since Display creation <br>
+	 * GLFW Wrapper
+	 * 
+	 * @return The Time since display creation
+	 */
 	public double getTime() {
 		return glfwGetTime();
 	}
 
+	/**
+	 * Swaps the Buffer of the Window <br>
+	 * Will be called every render tick <br>
+	 * GLFW Wrapper
+	 * 
+	 */
 	public void swapBuffers() {
 		glfwSwapBuffers(mWindow);
 	}
-
+	
+	/**
+	 * Cleans up everything related to GLFW <br>
+	 * Should be called when the window is closed or the program is ending
+	 */
 	public void cleanup() {
 		glfwDestroyWindow(mWindow);
 		glfwTerminate();
 	}
 
+	/**
+	 * Getter for if the window should close <br>
+	 * GLFW Wrapper
+	 * 
+	 * @return Whether the window should close
+	 */
 	public boolean windowShouldClose() {
 		return glfwWindowShouldClose(mWindow);
 	}
 
+	/**
+	 * Getter for the GLFW Window
+	 * 
+	 * @return The GLFW Window as long
+	 */
 	public long getWindow() {
 		return mWindow;
 	}
 
+	/**
+	 * Getter for the Title variable in Display, not the current value of Title in the Window
+	 * 
+	 * @return The Title variable stored in Display
+	 */
 	public String getBaseTitle() {
 		return mTitle;
 	}
 
+	/**
+	 * Getter for width
+	 * 
+	 * @return The width of the Display in pixels
+	 */
 	public int getWidth() {
 		return mWidth;
 	}
 
+	/**
+	 * Getter for height
+	 * 
+	 * @return The height of the Display in pixels
+	 */
 	public int getHeight() {
 		return mHeight;
 	}
