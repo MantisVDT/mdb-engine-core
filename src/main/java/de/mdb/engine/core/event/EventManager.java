@@ -1,5 +1,11 @@
 package de.mdb.engine.core.event;
 
+/**
+ * Keeps track of all EventListeners
+ * 
+ * @author Mattis Boeckle
+ *
+ */
 public class EventManager {
 	
 	public static EventExecutor events = new EventExecutor();

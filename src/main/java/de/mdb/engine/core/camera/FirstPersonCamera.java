@@ -13,21 +13,46 @@ import de.mdb.engine.core.event.EventManager;
 import de.mdb.engine.core.input.events.MouseMovedEvent;
 import de.mdb.engine.core.util.Clock;
 
+/**
+ * Represents a FirstPersonCamera in 3D Space with a position and rotation <br>
+ * Can be used to "move" in 3D and look at models
+ * 
+ * @author Mattis Boeckle
+ *
+ */
 public class FirstPersonCamera extends Camera implements EventListener {
 	
+	// Private Fields
 	private float flySpeed = 1.0f;
 	private float rotationCap = 10.0f;
 	
+	/**
+	 * Default empty Constructor <br>
+	 * Initializes all fields and registers this class as an EventListener
+	 */
 	public FirstPersonCamera() {
 		super();
 		EventManager.registerListener(this);
 	}
 
+	/**
+	 * Constructor to initialize the Fields to something else than the default values. <br>
+	 * Initializes all fields given the variables and registers this class as an EventListener
+	 * 
+	 * @param position The position to initialize the Camera to
+	 * @param rotation The rotation to initialize the Camera to
+	 */
 	public FirstPersonCamera(Vector3f position, Vector3f rotation) {
 		super(position, rotation);
 		EventManager.registerListener(this);
 	}
 
+	/**
+	 * The EventListener function for the MouseMovedEvent <br>
+	 * Will be called from EventManager
+	 * 
+	 * @param e The MouseMovedEvent to be handled
+	 */
 	@Event
 	public void onMouseMove(MouseMovedEvent e) {
 		float dX = e.getDX();
@@ -40,12 +65,38 @@ public class FirstPersonCamera extends Camera implements EventListener {
 		moveRotation(dY * Clock.getDeltaTime() * -10.0f, dX * Clock.getDeltaTime() * -10.0f, 0);
 	}
 	
+	/**
+	 * Initializes the default settings in the Display <br>
+	 * Sets the Cursor position to be in the center of the Screen
+	 * then disables the Cursor.
+	 * <br>
+	 * <br>
+	 * This is required for the camera to be free moving based on mouse motion.
+	 * 
+	 * @param d The Display for the Settings to be applied to
+	 */
 	public void setupSettings(Display d)
 	{
 		d.setCursorPosition(d.getWidth()/2, d.getHeight()/2);
 		d.setInputMode(GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 	
+	/**
+	 * Getter for FlySpeed
+	 * 
+	 * @return The private field FlySpeed
+	 */
+	public float getFlySpeed()
+	{
+		return flySpeed;
+	}
+	
+	/**
+	 * Calculates the ViewMatrix of the Camera based on its position and rotation <br>
+	 * Used for Shader calculations
+	 * 
+	 * @return The calculated Matrix4f
+	 */
 	public Matrix4f getViewMatrix() {
 		Matrix4f view = new Matrix4f().identity();
 
@@ -57,6 +108,13 @@ public class FirstPersonCamera extends Camera implements EventListener {
 		return view;
 	}
 
+	/**
+	 * Moves the camera position based on the given offsets
+	 * 
+	 * @param offsetX The x offset
+	 * @param offsetY The y offset
+	 * @param offsetZ The z offset
+	 */
 	public void movePosition(float offsetX, float offsetY, float offsetZ) {
 		if(movePosition)
 		{
@@ -76,6 +134,13 @@ public class FirstPersonCamera extends Camera implements EventListener {
 		
 	}
 
+	/**
+	 * Updates the Rotation based on the given offsets
+	 * 
+	 * @param offsetX The x offset in Degree
+	 * @param offsetY The y offset in Degree
+	 * @param offsetZ The z offset in Degree
+	 */
 	public void moveRotation(float offsetX, float offsetY, float offsetZ) {
 		if(moveRotation)
 		{
@@ -95,6 +160,11 @@ public class FirstPersonCamera extends Camera implements EventListener {
 		}
 	}
 	
+	/**
+	 * Setter for the private Field FlySpeed
+	 * 
+	 * @param speed The new FlySpeed as float
+	 */
 	public void setFlySpeed(float speed)
 	{
 		flySpeed = speed;

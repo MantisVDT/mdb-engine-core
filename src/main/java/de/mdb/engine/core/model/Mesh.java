@@ -79,10 +79,11 @@ public class Mesh {
 		shader.use();
 		shader.setMat4("model", modelMatrix);
 		
+		assert(material != null);
 		material.load(shader);
 		
 		Texture texture = material.getTexture();
-
+		
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture != null ? texture.getID() : Texture.DEFAULT_TEXTURE.getID());
 		

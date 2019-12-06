@@ -50,19 +50,41 @@ public abstract class GUIComponent {
 		return components;
 	}
 	
+	/**
+	 * Recursively fetches all components and subcomponents of this GUIComponent that are of type c
+	 * 
+	 * @param c The GUIComponent Type to filter all the Components by
+	 * @return The List of GUIComponents of type c
+	 */
 	public List<GUIComponent> getComponentsOfType(Class<? extends GUIComponent> c)
+	{
+		return getComponentsOfType(this, c);
+	}
+	
+	/**
+	 * Recursively fetches all components and subcomponents of the comp GUIComponent that are of type c
+	 * 
+	 * @param comp The component to get the subcomponents from
+	 * @param c The GUIComponent Type to filter all the Components by
+	 * @return The List of GUIComponents of type c in comp
+	 */
+	public List<GUIComponent> getComponentsOfType(GUIComponent comp, Class<? extends GUIComponent> c)
 	{
 		List<GUIComponent> componentsOfType = new ArrayList<>();
 		
-		for(GUIComponent component : components)
+		for(GUIComponent component : comp.components)
 		{
-			if(component.getClass().equals(c))
+			if(component.components.isEmpty())
 			{
-				componentsOfType.add(component);
-			}
+				if(component.getClass().equals(c))
+				{
+					componentsOfType.add(component);
+				}
+			}else {
+				componentsOfType.addAll(getComponentsOfType(component, c));
+			}	
 		}
 		
 		return componentsOfType;
 	}
-	
 }

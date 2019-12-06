@@ -34,4 +34,26 @@ public class GUIPropertyInt extends GUIComponent{
 		return val[0];
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public int getMin() {
+		return min;
+	}
+
+	public int getMax() {
+		return max;
+	}
+
+	public int getStep() {
+		return step;
+	}
+
+	public float getIncPerPixel() {
+		return inc_per_pixel;
+	}
+	
+	
+
 }
