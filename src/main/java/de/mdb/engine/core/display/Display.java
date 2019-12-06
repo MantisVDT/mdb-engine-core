@@ -83,8 +83,6 @@ public class Display implements EventListener {
 		mWidth = width;
 		mHeight = height;
 		mvSync = vSync;
-		
-		createWindow();
 	}
 
 	/**
@@ -103,7 +101,7 @@ public class Display implements EventListener {
 	/**
 	 * Handles GLFW and the creation of a new Window with Events and Input
 	 */
-	private void createWindow() {
+	public void createWindow() {
 		if (!glfwInit()) {
 			Debug.severe("Failed to initialize GLFW!");
 		}
