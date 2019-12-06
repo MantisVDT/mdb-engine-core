@@ -3,13 +3,8 @@ package de.mdb.engine.core.input.events;
 import de.mdb.engine.core.event.IEvent;
 
 /**
- * 
- * <h1>Basic Event</h1>
- * <p>
- * Usually called when a key is released
- * 
- * 
- * @version 1.1
+ * Created when a Key is released <br>
+ * Stores the KeyCode and Mods of the released Key
  * 
  * @author Mattis Boeckle
  *
@@ -25,9 +20,11 @@ public class KeyReleasedEvent implements IEvent {
 	private int mods;
 	
 	/**
-	 * Default Constructor
+	 * Event Constructor <br>
+	 * Stores the keyCode and the mods of the released Key
 	 * 
-	 * @param keyCode The keyCode of the released Button
+	 * @param keyCode The keyCode of the released Key
+	 * @param mods The mods of the Key
 	 */
 	public KeyReleasedEvent(int keyCode, int mods)
 	{
@@ -36,15 +33,20 @@ public class KeyReleasedEvent implements IEvent {
 	}
 	
 	/**
-	 * Basic Getter
+	 * Getter for the keyCode
 	 * 
-	 * @return The keyCode of the released Button
+	 * @return The keyCode of the released Key
 	 */
 	public int getKeyCode()
 	{
 		return keyCode;
 	}
 	
+	/**
+	 * Getter for the Mods
+	 * 
+	 * @return The mods of the released Key
+	 */
 	public int getMods()
 	{
 		return mods;

@@ -3,13 +3,8 @@ package de.mdb.engine.core.input.events;
 import de.mdb.engine.core.event.IEvent;
 
 /**
- * 
- * <h1>Basic Event</h1>
- * <p>
- * Usually called when a Mouse Button is pressed
- * 
- * 
- * @version 1.1
+ * Created when a Mouse Button is pressed <br>
+ * Stores the x and y Coordinates of the Mouse and the keyCode of the pressed Button
  * 
  * @author Mattis Boeckle
  *
@@ -25,7 +20,7 @@ public class MouseDownEvent implements IEvent {
 	private int keyCode;
 	
 	/**
-	 * Default Constructor
+	 * Event Constructor
 	 * 
 	 * @param x			The x position where the Mouse is pressed
 	 * @param y			The y position where the Mouse is pressed
@@ -39,9 +34,9 @@ public class MouseDownEvent implements IEvent {
 	}
 	
 	/**
-	 * Basic Getter
+	 * Getter for the x Coordinate
 	 * 
-	 * @return	The x value of the Event
+	 * @return	The x value of the position of the Mouse
 	 */
 	public float getX()
 	{
@@ -49,9 +44,9 @@ public class MouseDownEvent implements IEvent {
 	}
 	
 	/**
-	 * Basic Getter
+	 * Getter for the y Coordinate
 	 * 
-	 * @return The y value of the Event
+	 * @return The y value of the position of the Mouse
 	 */
 	public float getY()
 	{
@@ -59,7 +54,7 @@ public class MouseDownEvent implements IEvent {
 	}
 	
 	/**
-	 * Basic Getter
+	 * Getter for the KeyCode of the Button
 	 * 
 	 * @return The keyCode of the pressed Button
 	 */

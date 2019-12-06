@@ -12,7 +12,7 @@ import de.mdb.engine.core.logger.Debug;
  * Changes by Mattis Boeckle
  *
  */
-public class EventHandler{
+public class EventHandler implements Comparable<EventHandler>{
 	
 	//Private Fields
 	private final EventListener listener;
@@ -62,5 +62,17 @@ public class EventHandler{
 	public String toString()
 	{
 		return "(EventHandler" + this.listener + ": " + method.getName() + ")";
+	}
+	
+	public int getPriority()
+	{
+		return annotation.priority();
+	}
+	
+	@Override
+	public int compareTo(EventHandler other) {
+		int annotation = this.annotation.priority() - other.annotation.priority();
+		if(annotation == 0) annotation = this.listener.hashCode()- other.listener.hashCode();
+		return annotation == 0 ? this.hashCode() - other.hashCode() : annotation;
 	}
 }

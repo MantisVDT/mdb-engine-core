@@ -3,13 +3,8 @@ package de.mdb.engine.core.input.events;
 import de.mdb.engine.core.event.IEvent;
 
 /**
- * 
- * <h1>Basic Event</h1>
- * <p>
- * Usually called when the Mouse is dragged
- * 
- * 
- * @version 1.1
+ * Created when the Mouse is dragged (moving while a button is pressed) <br>
+ * Stores the new x and y coordinates of the Mouse
  * 
  * @author Mattis Boeckle
  *
@@ -24,11 +19,11 @@ public class MouseDraggedEvent implements IEvent {
 	private int x,y, keyCode;
 	
 	/**
-	 * Default Constructor
+	 * Event Constructor
 	 * 
-	 * @param x			The x Position of the Mouse
-	 * @param y			The y Position of the Mouse
-	 * @param keyCode	The keyCode of the pressed Button
+	 * @param x			The x Coordinate of the Mouse
+	 * @param y			The y Coordinate of the Mouse
+	 * @param keyCode	The keyCode of the Button that is currently pressed
 	 */
 	public MouseDraggedEvent(int x, int y, int keyCode)
 	{
@@ -38,9 +33,9 @@ public class MouseDraggedEvent implements IEvent {
 	}
 	
 	/**
-	 * Basic Getter
+	 * Getter for the x Coordinate
 	 * 
-	 * @return The x value of the Event
+	 * @return The x Coordinate of the Mouse
 	 */
 	public int getX()
 	{
@@ -48,9 +43,9 @@ public class MouseDraggedEvent implements IEvent {
 	}
 	
 	/**
-	 * Basic Getter
+	 * Getter for the y Coordinate
 	 * 
-	 * @return The y value of the Event
+	 * @return The y Coordinate of the Mouse
 	 */
 	public int getY()
 	{
@@ -58,9 +53,9 @@ public class MouseDraggedEvent implements IEvent {
 	}
 	
 	/**
-	 * Basic Getter
+	 * Getter for the KeyCode
 	 * 
-	 * @return The keyCode of the pressed Button
+	 * @return The keyCode of the currently pressed Button
 	 */
 	public int getKeyCode()
 	{
