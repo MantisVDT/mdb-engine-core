@@ -40,13 +40,11 @@ import de.mdb.engine.core.shader.Shader;
 import de.mdb.engine.core.shader.ShaderProgram;
 import de.mdb.engine.core.util.Clock;
 import de.mdb.engine.core.util.Data;
-import gui.GUITestElement;
 
 public class DummyGame implements IGameLogic, EventListener {
 	
 	//VARIABLES
-	private ModelRenderer modelRenderer;
-	private GUIRenderer guiRenderer;
+	private GUIDebugElement debugElement;
 	
 	private ShaderProgram simpleShader;
 
@@ -55,12 +53,11 @@ public class DummyGame implements IGameLogic, EventListener {
 
 	private DirectionalLight dirLight;
 
-	private Model monkey;
-	
-	private GUIDebugElement debug;
-
-	Vector3f pointLightPositions[] = { new Vector3f(0.7f, 0.2f, 2.0f), new Vector3f(2.3f, -3.3f, -4.0f),
-			new Vector3f(-4.0f, 2.0f, -12.0f), new Vector3f(0.0f, 0.0f, -3.0f) };
+	Vector3f pointLightPositions[] = { 
+				new Vector3f(0.7f, 0.2f, 2.0f), 
+				new Vector3f(2.3f, -3.3f, -4.0f),
+				new Vector3f(-4.0f, 2.0f, -12.0f),
+				new Vector3f(0.0f, 0.0f, -3.0f) };
 
 	public void init() throws Exception {
 		EventManager.registerListener(this);
@@ -68,15 +65,13 @@ public class DummyGame implements IGameLogic, EventListener {
 		Display engineDisplay = GameEngine.getDisplay();
 		
 		//GUI Stuff
-		guiRenderer = new GUIRenderer();
+		GUIRenderer guiRenderer = new GUIRenderer();
 		GUIManager.registerGUIRenderer(guiRenderer);
 		
-		//Create the DebugElement and set its style
-		debug = new GUIDebugElement("Debug", 20, 20);
-		debug.setGUIStyle(new GUIRedStyle());
-		
-		guiRenderer.addGUIElement(debug);
-		guiRenderer.addGUIElement(new GUITestElement("Test", 20, 280));
+		//Create the DebugElement and set its style	
+		debugElement = new GUIDebugElement("Debug", 20, 20);
+		debugElement.setGUIStyle(new GUIRedStyle());
+		guiRenderer.addGUIElement(debugElement);
 
 		//Main shader
 		simpleShader = new ShaderProgram();
@@ -115,14 +110,14 @@ public class DummyGame implements IGameLogic, EventListener {
 		Model cube = OBJLoader.loadModel(Data.RES_PATH + "models/cube/cube.obj", "", Assimp.aiProcess_Triangulate);
 		cube.translate(5.0f, 0, 0);
 		
-		monkey = OBJLoader.loadModel(Data.RES_PATH + "models/monkey/monkey.obj", "", Assimp.aiProcess_Triangulate);
+		Model monkey = OBJLoader.loadModel(Data.RES_PATH + "models/monkey/monkey.obj", "", Assimp.aiProcess_Triangulate);
 		monkey.translate(-8.0f, 0, 0);
 		
 		Model tower = OBJLoader.loadModel(Data.RES_PATH + "models/tower/tower_High.obj", "models/tower/textures", Assimp.aiProcess_Triangulate);
 		tower.translate(0, 0, -10.0f);
 		
 		//Model renderer
-		modelRenderer = new ModelRenderer(simpleShader);
+		ModelRenderer modelRenderer = new ModelRenderer(simpleShader);
 		modelRenderer.addModel(nanoSuit);
 		modelRenderer.addModel(cube);
 		modelRenderer.addModel(monkey);
@@ -173,24 +168,22 @@ public class DummyGame implements IGameLogic, EventListener {
 	}
 
 	public void update() {
-		camera.setFlySpeed(debug.getFlySpeed());
+		camera.setFlySpeed(debugElement.getFlySpeed());
 		
 		simpleShader.use();
 		simpleShader.setVec3("viewPos", camera.getPosition());
 		
-		NkColorf bg = debug.getBackground();
-		GameEngine.setClearColor(new Vector4f(bg.r(), bg.g(), bg.b(), bg.a()));
-		
+		NkColorf bg = debugElement.getBackground();
+		GameEngine.setClearColor(new Vector4f(bg.r(), bg.g(), bg.b(), bg.a()));	
 	}
 
 	public void render() {
-
 		dirLight.load(simpleShader);
 		PointLightManager.load(simpleShader);
 	}
 
 	public void cleanup() {
-		
+		simpleShader.delete();
 	}
 
 	public static void main(String[] args) {

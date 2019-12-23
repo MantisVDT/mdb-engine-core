@@ -27,13 +27,18 @@ public class GameEngine implements Runnable{
 	
 	public GameEngine(String windowTitle, int width, int height, boolean vSync, IGameLogic gameLogic)
 	{
-		gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
 		Debug.info("Initializing Engine");
-		display = new Display(width, height, windowTitle, vSync);
+		gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
+		initDisplay(windowTitle, width, height, vSync);
 		this.gameLogic = gameLogic;
 	}
 	
-	public void init()
+	private static synchronized void initDisplay(String windowTitle, int width, int height, boolean vSync)
+	{
+		display = new Display(width, height, windowTitle, vSync);
+	}
+	
+	public static synchronized void init()
 	{
 		masterRenderer = new MasterRenderer();
 		GameEngine.registerRenderer(masterRenderer);
@@ -74,7 +79,7 @@ public class GameEngine implements Runnable{
 		display.cleanup();
 	}
 	
-	public static void stop()
+	public static synchronized void stop()
 	{
 		glfwSetWindowShouldClose(display.getWindow(), true);
 	}
@@ -85,18 +90,22 @@ public class GameEngine implements Runnable{
 		gameLogic.input();
 	}
 	
-	private void sync(double loopStartTime)
+	private synchronized void sync(double loopStartTime)
 	{
-		float loopSlot = 1f / 50;
+		float loopSlot = 1f / 50.0f;
 		double endTime = loopStartTime + loopSlot;
 		while(Clock.getTime() < endTime) {
 			try {
-				Thread.sleep(1);
-			}catch(InterruptedException e) { Debug.severe(e.getMessage()); }
+				wait(1);
+			}catch(InterruptedException e) 
+			{ 
+				Debug.severe(e.getMessage());
+				gameLoopThread.interrupt();
+			}
 		}
 	}
 	
-	public void start()
+	public synchronized void start()
 	{
 		if(System.getProperty("os.name").contains("Mac")) {
 			gameLoopThread.run();
