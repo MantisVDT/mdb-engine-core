@@ -59,7 +59,7 @@ public class TextureLoader {
 		return new CubeMap(data, w, h);
 	}
 
-	private static ByteBuffer loadImageData(String filename, IntBuffer w, IntBuffer h, IntBuffer comp) {
+	public static ByteBuffer loadImageData(String filename, IntBuffer w, IntBuffer h, IntBuffer comp) {
 		File f = new File(Data.RES_PATH + filename);
 
 		try {

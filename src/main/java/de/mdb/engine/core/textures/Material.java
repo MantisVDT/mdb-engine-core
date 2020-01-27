@@ -109,7 +109,12 @@ public class Material {
 	}
 
 	public Texture getTexture() {
-		return texture;
+		if(texture != null)
+		{
+			return texture;
+		}else {
+			return Texture.DEFAULT_TEXTURE;
+		}
 	}
 
 	public void setTexture(Texture texture) {

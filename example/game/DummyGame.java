@@ -1,16 +1,8 @@
 package game;
 
-import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
-import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_DISABLED;
-import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_SHIFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_TAB;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+import static org.lwjgl.glfw.GLFW.*;
 
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.assimp.Assimp;
@@ -33,6 +25,7 @@ import de.mdb.engine.core.light.PointLight;
 import de.mdb.engine.core.light.PointLightManager;
 import de.mdb.engine.core.model.Model;
 import de.mdb.engine.core.model.OBJLoader;
+import de.mdb.engine.core.particle.ParticleSystemImpl;
 import de.mdb.engine.core.render.FirstPersonRenderer;
 import de.mdb.engine.core.render.GUIRenderer;
 import de.mdb.engine.core.render.ModelRenderer;
@@ -47,11 +40,16 @@ public class DummyGame implements IGameLogic, EventListener {
 	private GUIDebugElement debugElement;
 	
 	private ShaderProgram simpleShader;
+	private ShaderProgram particleShader;
 
 	private FirstPersonCamera camera;
 	private boolean freeMove = true;
+	
+	private Model monkey;
 
 	private DirectionalLight dirLight;
+	
+	private ParticleSystemImpl particleSystem;
 
 	Vector3f pointLightPositions[] = { 
 				new Vector3f(0.7f, 0.2f, 2.0f), 
@@ -63,6 +61,14 @@ public class DummyGame implements IGameLogic, EventListener {
 		EventManager.registerListener(this);
 		
 		Display engineDisplay = GameEngine.getDisplay();
+		engineDisplay.setWindowIcon("textures/MdB.png");
+		
+		particleSystem = new ParticleSystemImpl(1000, 25, 1f, 4, 1);
+		particleSystem.randomizeRotation();
+		particleSystem.setDirection(new Vector3f(1, 0, 0), 0.1f);
+		particleSystem.setLifeError(0.4f);
+		particleSystem.setSpeedError(0.4f);
+		particleSystem.setScaleError(0.4f);
 		
 		//GUI Stuff
 		GUIRenderer guiRenderer = new GUIRenderer();
@@ -79,8 +85,19 @@ public class DummyGame implements IGameLogic, EventListener {
 		simpleShader.attachShader(new Shader(Data.RES_PATH + "shaders/fragmentShaderSimple.fs", Shader.FRAGMENT_SHADER));
 		simpleShader.linkShader();
 		
+		Matrix4f projection = new Matrix4f().perspective((float)Math.toRadians(90.0f),
+				(float)GameEngine.getDisplay().getWidth() / GameEngine.getDisplay().getHeight(), 0.1f, 1000.0f);
+		
+		simpleShader.use();
+		simpleShader.setMat4("projection", projection);
+		
+		particleShader = new ShaderProgram();
+		particleShader.attachShader(new Shader(Data.RES_PATH + "shaders/particleVertexShader.vs", Shader.VERTEX_SHADER));
+		particleShader.attachShader(new Shader(Data.RES_PATH + "shaders/particleFragmentShader.fs", Shader.FRAGMENT_SHADER));
+		particleShader.linkShader();
+		
 		//Camera
-		camera = new FirstPersonCamera(new Vector3f(0.0f, 8.0f, 10.0f), new Vector3f());
+		camera = new FirstPersonCamera(new Vector3f(0.0f, 0.0f, 5.0f), new Vector3f());
 		camera.setupSettings(GameEngine.getDisplay());
 		
 		//FirstPersonRenderer
@@ -110,7 +127,7 @@ public class DummyGame implements IGameLogic, EventListener {
 		Model cube = OBJLoader.loadModel(Data.RES_PATH + "models/cube/cube.obj", "", Assimp.aiProcess_Triangulate);
 		cube.translate(5.0f, 0, 0);
 		
-		Model monkey = OBJLoader.loadModel(Data.RES_PATH + "models/monkey/monkey.obj", "", Assimp.aiProcess_Triangulate);
+		monkey = OBJLoader.loadModel(Data.RES_PATH + "models/monkey/monkey.obj", "", Assimp.aiProcess_Triangulate);
 		monkey.translate(-8.0f, 0, 0);
 		
 		Model tower = OBJLoader.loadModel(Data.RES_PATH + "models/tower/tower_High.obj", "models/tower/textures", Assimp.aiProcess_Triangulate);
@@ -124,6 +141,8 @@ public class DummyGame implements IGameLogic, EventListener {
 		modelRenderer.addModel(tower);
 		
 		GameEngine.registerRenderer(modelRenderer);
+		
+//		GameEngine.registerRenderer(new ParticleRenderer(particleShader, projection, camera));
 	}
 	
 	@Event
@@ -180,6 +199,7 @@ public class DummyGame implements IGameLogic, EventListener {
 	public void render() {
 		dirLight.load(simpleShader);
 		PointLightManager.load(simpleShader);
+		particleSystem.generateParticles(new Vector3f(0.0f));
 	}
 
 	public void cleanup() {

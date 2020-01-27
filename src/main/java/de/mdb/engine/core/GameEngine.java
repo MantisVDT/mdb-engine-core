@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.joml.Vector4f;
 
@@ -24,6 +25,8 @@ public class GameEngine implements Runnable{
 	private static MasterRenderer masterRenderer;
 	
 	private static ArrayList<Renderer> renderers = new ArrayList<>();
+	
+	public static final Random RANDOM = new Random();
 	
 	public GameEngine(String windowTitle, int width, int height, boolean vSync, IGameLogic gameLogic)
 	{
@@ -112,7 +115,6 @@ public class GameEngine implements Runnable{
 		}else {
 			gameLoopThread.start();
 		}
-		
 	}
 	
 	protected void update()
