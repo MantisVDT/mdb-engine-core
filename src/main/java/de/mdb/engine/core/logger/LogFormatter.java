@@ -4,6 +4,12 @@ import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
+/**
+ * Specifies the Format in which Messages will be logged in the Engine
+ * 
+ * @author Mattis Boeckle
+ *
+ */
 public class LogFormatter extends Formatter {
 
 	@Override

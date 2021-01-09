@@ -1,43 +1,14 @@
 package de.mdb.engine.core.display;
 
-import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
-import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
-import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
-import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_DEBUG_CONTEXT;
-import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_FORWARD_COMPAT;
-import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
-import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
-import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
-import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
-import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
-import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
-import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
-import static org.lwjgl.glfw.GLFW.glfwSetClipboardString;
-import static org.lwjgl.glfw.GLFW.glfwSetCursorPos;
-import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetFramebufferSizeCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
-import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
-import static org.lwjgl.glfw.GLFW.nglfwGetClipboardString;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.glViewport;
 
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWFramebufferSizeCallbackI;
-import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.Platform;
 
 import de.mdb.engine.core.display.event.FramebufferSizeEvent;
@@ -47,6 +18,7 @@ import de.mdb.engine.core.event.EventManager;
 import de.mdb.engine.core.input.Input;
 import de.mdb.engine.core.input.events.KeyReleasedEvent;
 import de.mdb.engine.core.logger.Debug;
+import de.mdb.engine.core.textures.TextureLoader;
 
 /**
  * Represents a Window in the GameEngine
@@ -145,9 +117,39 @@ public class Display implements EventListener {
 		// Adds the listeners for CursorPos, MouseButton, KeyCallback, CharCallback and
 		// ScrollCallback
 		new Input(mWindow);
-
+		
 		if (mvSync)
 			glfwSwapInterval(1);
+		else
+			glfwSwapInterval(0);
+		
+	}
+	
+	/**
+	 * Setter for Image Icon <br>
+	 * Wrapper for GLFW
+	 * 
+	 * @param fileName The file path of a File in res/
+	 */
+	public void setWindowIcon(String fileName)
+	{
+		try(MemoryStack stack = MemoryStack.stackPush())
+		{
+			IntBuffer w = stack.mallocInt(1);
+			IntBuffer h = stack.mallocInt(1);
+			IntBuffer comp = stack.mallocInt(1);
+			ByteBuffer imageData = TextureLoader.loadImageData(fileName, w, h, comp);
+			
+			GLFWImage image = GLFWImage.malloc();
+			GLFWImage.Buffer imagebf = GLFWImage.malloc(1);
+			image.set(w.get(), h.get(), imageData);
+			imagebf.put(0, image);
+			
+			glfwSetWindowIcon(mWindow, imagebf);
+			
+			image.free();
+			imagebf.free();
+		}
 	}
 
 	/**

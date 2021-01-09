@@ -1,16 +1,8 @@
 package game;
 
-import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
-import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_DISABLED;
-import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_SHIFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_TAB;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+import static org.lwjgl.glfw.GLFW.*;
 
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.assimp.Assimp;
@@ -33,50 +25,63 @@ import de.mdb.engine.core.light.PointLight;
 import de.mdb.engine.core.light.PointLightManager;
 import de.mdb.engine.core.model.Model;
 import de.mdb.engine.core.model.OBJLoader;
-import de.mdb.engine.core.render.FirstPersonRenderer;
-import de.mdb.engine.core.render.GUIRenderer;
-import de.mdb.engine.core.render.ModelRenderer;
+import de.mdb.engine.core.particle.ParticleSystemImpl;
+import de.mdb.engine.core.render.*;
+import de.mdb.engine.core.render.shapes.Rectangle;
 import de.mdb.engine.core.shader.Shader;
 import de.mdb.engine.core.shader.ShaderProgram;
+import de.mdb.engine.core.textures.Texture;
+import de.mdb.engine.core.textures.TextureCache;
 import de.mdb.engine.core.util.Clock;
 import de.mdb.engine.core.util.Data;
-import gui.GUITestElement;
 
 public class DummyGame implements IGameLogic, EventListener {
 	
 	//VARIABLES
-	private ModelRenderer modelRenderer;
-	private GUIRenderer guiRenderer;
+	private GUIDebugElement debugElement;
 	
 	private ShaderProgram simpleShader;
+	private ShaderProgram particleShader;
 
 	private FirstPersonCamera camera;
 	private boolean freeMove = true;
+	
+	private Model monkey;
 
 	private DirectionalLight dirLight;
-
-	private Model monkey;
 	
-	private GUIDebugElement debug;
+	private ParticleSystemImpl particleSystem;
+	
+	private Rectangle rect;
+	private Matrix4f projection;
 
-	Vector3f pointLightPositions[] = { new Vector3f(0.7f, 0.2f, 2.0f), new Vector3f(2.3f, -3.3f, -4.0f),
-			new Vector3f(-4.0f, 2.0f, -12.0f), new Vector3f(0.0f, 0.0f, -3.0f) };
+	Vector3f pointLightPositions[] = { 
+				new Vector3f(0.7f, 0.2f, 2.0f), 
+				new Vector3f(2.3f, -3.3f, -4.0f),
+				new Vector3f(-4.0f, 2.0f, -12.0f),
+				new Vector3f(0.0f, 0.0f, -3.0f) };
 
 	public void init() throws Exception {
 		EventManager.registerListener(this);
 		
 		Display engineDisplay = GameEngine.getDisplay();
+		engineDisplay.setWindowIcon("textures/MdB.png");
+		
+		particleSystem = new ParticleSystemImpl(1000, 25, 1f, 4, 1);
+		particleSystem.randomizeRotation();
+		particleSystem.setDirection(new Vector3f(1, 0, 0), 0.1f);
+		particleSystem.setLifeError(0.4f);
+		particleSystem.setSpeedError(0.4f);
+		particleSystem.setScaleError(0.4f);
 		
 		//GUI Stuff
-		guiRenderer = new GUIRenderer();
+		GUIRenderer guiRenderer = new GUIRenderer();
 		GUIManager.registerGUIRenderer(guiRenderer);
 		
-		//Create the DebugElement and set its style
-		debug = new GUIDebugElement("Debug", 20, 20);
-		debug.setGUIStyle(new GUIRedStyle());
-		
-		guiRenderer.addGUIElement(debug);
-		guiRenderer.addGUIElement(new GUITestElement("Test", 20, 280));
+		//Create the DebugElement and set its style	
+		debugElement = new GUIDebugElement("Debug", 20, 20);
+		debugElement.setGUIStyle(new GUIRedStyle());
+		guiRenderer.addGUIElement(debugElement);
 
 		//Main shader
 		simpleShader = new ShaderProgram();
@@ -84,8 +89,19 @@ public class DummyGame implements IGameLogic, EventListener {
 		simpleShader.attachShader(new Shader(Data.RES_PATH + "shaders/fragmentShaderSimple.fs", Shader.FRAGMENT_SHADER));
 		simpleShader.linkShader();
 		
+		projection = new Matrix4f().perspective((float)Math.toRadians(90.0f),
+				(float)GameEngine.getDisplay().getWidth() / GameEngine.getDisplay().getHeight(), 0.1f, 1000.0f);
+		
+		simpleShader.use();
+		simpleShader.setMat4("projection", projection);
+		
+		particleShader = new ShaderProgram();
+		particleShader.attachShader(new Shader(Data.RES_PATH + "shaders/particleVertexShader.vs", Shader.VERTEX_SHADER));
+		particleShader.attachShader(new Shader(Data.RES_PATH + "shaders/particleFragmentShader.fs", Shader.FRAGMENT_SHADER));
+		particleShader.linkShader();
+		
 		//Camera
-		camera = new FirstPersonCamera(new Vector3f(0.0f, 8.0f, 10.0f), new Vector3f());
+		camera = new FirstPersonCamera(new Vector3f(0.0f, 0.0f, 5.0f), new Vector3f());
 		camera.setupSettings(GameEngine.getDisplay());
 		
 		//FirstPersonRenderer
@@ -122,13 +138,19 @@ public class DummyGame implements IGameLogic, EventListener {
 		tower.translate(0, 0, -10.0f);
 		
 		//Model renderer
-		modelRenderer = new ModelRenderer(simpleShader);
+		ModelRenderer modelRenderer = new ModelRenderer(simpleShader);
 		modelRenderer.addModel(nanoSuit);
 		modelRenderer.addModel(cube);
 		modelRenderer.addModel(monkey);
 		modelRenderer.addModel(tower);
 		
 		GameEngine.registerRenderer(modelRenderer);
+		
+//		GameEngine.registerRenderer(new ParticleRenderer(particleShader, projection, camera));
+		
+		rect = new Rectangle(100, 100, 100, 100);
+		Texture texture = TextureCache.getInstance().getTexture("textures/something.png");
+		rect.setTexture(texture);
 	}
 	
 	@Event
@@ -155,6 +177,14 @@ public class DummyGame implements IGameLogic, EventListener {
 		} else if (Input.isKeyDown(GLFW_KEY_D)) {
 			camera.movePosition(5.0f * Clock.getDeltaTime(), 0, 0);
 		}
+		
+		if(Input.isKeyDown(GLFW_KEY_R)) {
+			GameEngine.setRenderMode(RenderMode.FILL);
+		}else if(Input.isKeyDown(GLFW_KEY_T)) {
+			GameEngine.setRenderMode(RenderMode.WIREFRAME);
+		}else if(Input.isKeyDown(GLFW_KEY_Y)) {
+			GameEngine.setRenderMode(RenderMode.POINT);
+		}
 	}
 	
 	private void switchInputState()
@@ -173,24 +203,24 @@ public class DummyGame implements IGameLogic, EventListener {
 	}
 
 	public void update() {
-		camera.setFlySpeed(debug.getFlySpeed());
+		camera.setFlySpeed(debugElement.getFlySpeed());
 		
 		simpleShader.use();
 		simpleShader.setVec3("viewPos", camera.getPosition());
 		
-		NkColorf bg = debug.getBackground();
-		GameEngine.setClearColor(new Vector4f(bg.r(), bg.g(), bg.b(), bg.a()));
-		
+		NkColorf bg = debugElement.getBackground();
+		GameEngine.setClearColor(new Vector4f(bg.r(), bg.g(), bg.b(), bg.a()));	
 	}
 
 	public void render() {
-
 		dirLight.load(simpleShader);
 		PointLightManager.load(simpleShader);
+		particleSystem.generateParticles(new Vector3f(0.0f));
+		rect.render();
 	}
 
 	public void cleanup() {
-		
+		simpleShader.delete();
 	}
 
 	public static void main(String[] args) {

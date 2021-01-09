@@ -9,19 +9,47 @@ public abstract class GUIComponent {
 	
 	protected ArrayList<GUIComponent> components;
 	
-	protected GUIComponent()
+	protected int height;
+	protected int cols;
+	protected boolean grouped;
+	
+	public static final int DEFAULT_COLS = 1;
+	public static final int DEFAULT_HEIGHT = 30;
+	public static final boolean DEFAULT_GROUPED = false;
+	
+	/**
+	 * Constructor for GUIComponent <br>
+	 * If no height is specified the DEFAULT_HEIGHT constant will be used
+	 */
+	public GUIComponent()
+	{
+		init(DEFAULT_HEIGHT);
+	}
+	
+	/**
+	 * Constructor for GUIComponent <br>
+	 * Initializes the Height of the Component
+	 * 
+	 * @param height The height of the Component
+	 */
+	public GUIComponent(int height)
+	{
+		init(height);
+	}
+	
+	private void init(int height)
 	{
 		components = new ArrayList<>();
+		this.height = height;
+		this.cols = DEFAULT_COLS;
+		this.grouped = DEFAULT_GROUPED;
 	}
 	
 	public abstract void layout(NkContext context);
 	
 	public void layoutComponents(NkContext context)
 	{
-		for(GUIComponent component : components)
-		{
-			component.layout(context);
-		}
+		components.forEach(comp -> comp.layout(context));
 	}
 	
 	public GUIComponent addComponent(GUIComponent component)
@@ -48,6 +76,20 @@ public abstract class GUIComponent {
 	public List<GUIComponent> getComponents()
 	{
 		return components;
+	}
+	
+	public int height() {
+		return height;
+	}
+	
+	public void height(int height)
+	{
+		this.height = height;
+	}
+	
+	public void setCols(int cols)
+	{
+		this.cols = cols;
 	}
 	
 	/**

@@ -33,12 +33,25 @@ import de.mdb.engine.core.input.events.MouseMovedEvent;
 import de.mdb.engine.core.input.events.MouseUpEvent;
 import de.mdb.engine.core.input.events.ScrollEvent;
 
+/**
+ * Handles all of the GLFWInputCallbacks for one GLFWWindow and dispatches Events to the EventManager
+ * 
+ * @author Mattis Boeckle
+ *
+ */
 public class Input implements EventListener{
 	
+	//Private Fields
 	private float mouse_x = 0, mouse_y = 0;
 	
 	private static long mWindow;
 	
+	/**
+	 * Constructor <br>
+	 * Registers the GLFW Callbacks using the windowHandle
+	 * 
+	 * @param windowHandle The window Handle of the GLFWWindow
+	 */
 	public Input(long windowHandle)
 	{
 		mWindow = windowHandle;
@@ -74,15 +87,34 @@ public class Input implements EventListener{
 		}));
 	}
 	
+	//TODO: Move this
+	/**
+	 * Returns whether a specific Key is currently pressed 
+	 * 
+	 * @param key The key Code of the Key
+	 * @return Whether the key is pressed or not
+	 */
 	public static boolean isKeyDown(int key) {
 		return glfwGetKey(mWindow, key) == GLFW_PRESS;
 	}
 	
+	//TODO: Move this
+	/**
+	 * Returns whether a specific Mouse Button is currently pressed
+	 * 
+	 * @param button The key Code of the Button
+	 * @return Whether the Button is pressed or not
+	 */
 	public static boolean isMouseButtonDown(int button)
 	{
 		return glfwGetMouseButton(mWindow, button) == GLFW_PRESS;
 	}
 	
+	/**
+	 * Returns the current Mouse Position as a 2D Vector
+	 * 
+	 * @return A Vector2f containing the current Mouse Position
+	 */
 	public static Vector2f getMousePosition()
 	{
 		try (MemoryStack stack = MemoryStack.stackPush())

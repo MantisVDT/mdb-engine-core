@@ -144,7 +144,6 @@ public class FirstPersonCamera extends Camera implements EventListener {
 	public void moveRotation(float offsetX, float offsetY, float offsetZ) {
 		if(moveRotation)
 		{
-			
 			offsetX = Math.max(-rotationCap, offsetX);
 			offsetX = Math.min(rotationCap, offsetX);
 			

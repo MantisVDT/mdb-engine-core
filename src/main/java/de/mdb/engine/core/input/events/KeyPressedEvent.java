@@ -3,13 +3,8 @@ package de.mdb.engine.core.input.events;
 import de.mdb.engine.core.event.IEvent;
 
 /**
- * 
- * <h1>Basic Event</h1>
- * <p>
- * Usually called when a key is pressed
- * 
- * 
- * @version 1.1
+ * Created when a Key is Pressed <br>
+ * Stores the KeyCode and Mods of the pressed Key
  * 
  * @author Mattis Boeckle
  *
@@ -25,7 +20,8 @@ public class KeyPressedEvent implements IEvent {
 	private int mods;
 	
 	/**
-	 * Default Constructor
+	 * Event Constructor <br>
+	 * Stores the keyCode and mods of the pressed Event Key
 	 * 
 	 * @param keyCode The keyCode of the pressed Key
 	 */
@@ -36,7 +32,7 @@ public class KeyPressedEvent implements IEvent {
 	}
 	
 	/**
-	 * Basic Getter
+	 * Getter for the keyCode
 	 * 
 	 * @return The keyCode of the pressed Key
 	 */
@@ -45,6 +41,11 @@ public class KeyPressedEvent implements IEvent {
 		return keyCode;
 	}
 	
+	/**
+	 * Getter for the Mods
+	 * 
+	 * @return The Mods for the pressed Key
+	 */
 	public int getMods()
 	{
 		return mods;

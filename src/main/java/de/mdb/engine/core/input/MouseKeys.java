@@ -6,7 +6,7 @@ package de.mdb.engine.core.input;
  * 
  * @version 1.0
  * 
- * @author Mattis
+ * @author Mattis Boeckle
  *
  */
 public class MouseKeys {
