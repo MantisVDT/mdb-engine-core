@@ -23,7 +23,7 @@ public class VertexArray {
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, glGenBuffers());
 		glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
-		glVertexAttribPointer(currentBufferID, dataSize, GL_FLOAT, false, 0, 0);
+		glVertexAttribPointer(currentBufferID, dataSize, GL_FLOAT, false, dataSize * Float.BYTES, 0);
 		glEnableVertexAttribArray(currentBufferID);
 		
 		currentBufferID++;

@@ -12,6 +12,7 @@ import de.mdb.engine.core.display.Display;
 import de.mdb.engine.core.gui.GUIManager;
 import de.mdb.engine.core.logger.Debug;
 import de.mdb.engine.core.render.MasterRenderer;
+import de.mdb.engine.core.render.RenderMode;
 import de.mdb.engine.core.render.Renderer;
 import de.mdb.engine.core.util.Clock;
 
@@ -167,6 +168,10 @@ public class GameEngine implements Runnable{
 	public static void setClearColor(float color)
 	{
 		masterRenderer.setClearColor(color);
+	}
+	
+	public static void setRenderMode(RenderMode mode) {
+		masterRenderer.mode = mode;
 	}
 	
 	public static Display getDisplay()

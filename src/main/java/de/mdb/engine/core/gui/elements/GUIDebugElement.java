@@ -1,12 +1,6 @@
 package de.mdb.engine.core.gui.elements;
 
-import static org.lwjgl.nuklear.Nuklear.NK_RGBA;
-import static org.lwjgl.nuklear.Nuklear.NK_TEXT_LEFT;
-import static org.lwjgl.nuklear.Nuklear.NK_WINDOW_BORDER;
-import static org.lwjgl.nuklear.Nuklear.NK_WINDOW_MINIMIZABLE;
-import static org.lwjgl.nuklear.Nuklear.NK_WINDOW_MOVABLE;
-import static org.lwjgl.nuklear.Nuklear.NK_WINDOW_SCALABLE;
-import static org.lwjgl.nuklear.Nuklear.NK_WINDOW_TITLE;
+import static org.lwjgl.nuklear.Nuklear.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
 import org.lwjgl.nuklear.NkColorf;
@@ -14,11 +8,7 @@ import org.lwjgl.nuklear.NkContext;
 import org.lwjgl.system.MemoryStack;
 
 import de.mdb.engine.core.GameEngine;
-import de.mdb.engine.core.gui.components.GUIButtonLabel;
-import de.mdb.engine.core.gui.components.GUIColorPicker;
-import de.mdb.engine.core.gui.components.GUILabel;
-import de.mdb.engine.core.gui.components.GUIPropertyInt;
-import de.mdb.engine.core.gui.components.GUIWindow;
+import de.mdb.engine.core.gui.components.*;
 import de.mdb.engine.core.util.Clock;
 
 public class GUIDebugElement extends GUIElement {
@@ -56,6 +46,17 @@ public class GUIDebugElement extends GUIElement {
 		colorPicker = new GUIColorPicker(25, background, NK_RGBA);
 		colorPicker.setHasSliders(true);
 		window.addComponent(colorPicker);
+		
+		
+		window.addComponent(new GUILabel("Keybindings:", NK_TEXT_LEFT));	
+		GUIGroup keyGroup = new GUIGroup(15, 2);
+		keyGroup.addComponent(new GUILabel("R", NK_TEXT_LEFT));
+		keyGroup.addComponent(new GUILabel("Fill", NK_TEXT_RIGHT));
+		keyGroup.addComponent(new GUILabel("T", NK_TEXT_LEFT));
+		keyGroup.addComponent(new GUILabel("Wireframe", NK_TEXT_RIGHT));
+		keyGroup.addComponent(new GUILabel("Y/Z", NK_TEXT_LEFT));
+		keyGroup.addComponent(new GUILabel("Point", NK_TEXT_RIGHT));
+		window.addComponent(keyGroup);
 		
 		exit = new GUIButtonLabel(30, "Exit");
 		window.addComponent(exit);

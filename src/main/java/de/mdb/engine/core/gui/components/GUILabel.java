@@ -10,11 +10,24 @@ public class GUILabel extends GUIComponent{
 	private String label;
 	private int align;
 	
+	/**
+	 * Initializes a new GUILabel
+	 * 
+	 * @param height The Height of the Label
+	 * @param label Text of the Label
+	 * @param align The alignment
+	 */
 	public GUILabel(int height, String label, int align) {
 		super(height);
 		init(label, align);
 	}
 	
+	/**
+	 * Initializes a new GUILabel
+	 * 
+	 * @param label Text of the Label
+	 * @param align The alignment
+	 */
 	public GUILabel(String label, int align) {
 		super();
 		init(label, align);

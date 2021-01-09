@@ -88,6 +88,10 @@ import static org.lwjgl.nuklear.Nuklear.nk_style_set_font;
 import static org.lwjgl.nuklear.Nuklear.nnk_strlen;
 import static org.lwjgl.nuklear.Nuklear.nnk_textedit_paste;
 import static org.lwjgl.nuklear.Nuklear.nnk_utf_decode;
+import static org.lwjgl.opengl.GL11.GL_FILL;
+import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11.GL_POLYGON_MODE;
+import static org.lwjgl.opengl.GL11.glPolygonMode;
 import static org.lwjgl.opengl.GL11C.GL_BLEND;
 import static org.lwjgl.opengl.GL11C.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11C.GL_DEPTH_TEST;
@@ -456,6 +460,7 @@ public class GUIRenderer extends Renderer implements EventListener {
 			glDisable(GL_CULL_FACE);
 			glDisable(GL_DEPTH_TEST);
 			glEnable(GL_SCISSOR_TEST);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			glActiveTexture(GL_TEXTURE0);
 
 			// setup shader
