@@ -50,7 +50,3 @@ None
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
-
-## Acknowledgements
-
-* [PurpleBooth](https://github.com/PurpleBooth) - *For the Template to make this Readme*
